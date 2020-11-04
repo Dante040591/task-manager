@@ -6,8 +6,8 @@ import TaskView from "../view/task.js";
 import TaskEditView from "../view/task-edit.js";
 import LoadMoreButtonView from "../view/load-more-button.js";
 import {render, RenderPosition, replace, remove} from "../utils/render.js";
-import {sortTaskDown, sortTaskUp} from '../utils/task.js';
-import {SortType} from '../const.js';
+import {sortTaskUp, sortTaskDown} from "../utils/task.js";
+import {SortType} from "../const.js";
 
 const TASK_COUNT_PER_STEP = 8;
 
@@ -21,7 +21,6 @@ export default class Board {
     this._sortComponent = new SortView();
     this._taskListComponent = new TaskListView();
     this._noTaskComponent = new NoTaskView();
-
     this._loadMoreButtonComponent = new LoadMoreButtonView();
 
     this._handleLoadMoreButtonClick = this._handleLoadMoreButtonClick.bind(this);
@@ -30,7 +29,10 @@ export default class Board {
 
   init(boardTasks) {
     this._boardTasks = boardTasks.slice();
-    this._sourcesBoardTasks = boardTasks.slice();
+    // 1. В отличии от сортировки по любому параметру,
+    // исходный порядок можно сохранить только одним способом -
+    // сохранив исходный массив:
+    this._sourcedBoardTasks = boardTasks.slice();
 
     render(this._boardContainer, this._boardComponent, RenderPosition.BEFOREEND);
     render(this._boardComponent, this._taskListComponent, RenderPosition.BEFOREEND);
@@ -39,6 +41,9 @@ export default class Board {
   }
 
   _sortTasks(sortType) {
+    // 2. Этот исходный массив задач необходим,
+    // потому что для сортировки мы будем мутировать
+    // массив в свойстве _boardTasks
     switch (sortType) {
       case SortType.DATE_UP:
         this._boardTasks.sort(sortTaskUp);
@@ -47,7 +52,9 @@ export default class Board {
         this._boardTasks.sort(sortTaskDown);
         break;
       default:
-        this._boardTasks = this._sourcesBoardTasks.slice();
+        // 3. А когда пользователь захочет "вернуть всё, как было",
+        // мы просто запишем в _boardTasks исходный массив
+        this._boardTasks = this._sourcedBoardTasks.slice();
     }
 
     this._currentSortType = sortType;
@@ -112,18 +119,23 @@ export default class Board {
   }
 
   _handleLoadMoreButtonClick() {
-    this._renderTasks(this._renderTaskCount, this._renderedTaskCount + TASK_COUNT_PER_STEP);
+    this._renderTasks(this._renderedTaskCount, this._renderedTaskCount + TASK_COUNT_PER_STEP);
     this._renderedTaskCount += TASK_COUNT_PER_STEP;
+
+    if (this._renderedTaskCount >= this._boardTasks.length) {
+      remove(this._loadMoreButtonComponent);
+    }
   }
 
   _renderLoadMoreButton() {
     render(this._boardComponent, this._loadMoreButtonComponent, RenderPosition.BEFOREEND);
 
-    this._loadMoreButtonComponent.setClickHandler(() => {
-      if (this._renderedTaskCount >= this._boardTasks.length) {
-        remove(this._loadMoreButtonComponent);
-      }
-    });
+    this._loadMoreButtonComponent.setClickHandler(this._handleLoadMoreButtonClick);
+  }
+
+  _clearTaskList() {
+    this._taskListComponent.getElement().innerHTML = ``;
+    this._renderedTaskCount = TASK_COUNT_PER_STEP;
   }
 
   _renderTaskList() {
@@ -142,10 +154,5 @@ export default class Board {
 
     this._renderSort();
     this._renderTaskList();
-  }
-
-  _clearTaskList() {
-    this._taskListComponent.getElement().innerHTML = ``;
-    this._renderedTaskCount = TASK_COUNT_PER_STEP;
   }
 }
