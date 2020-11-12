@@ -120,16 +120,6 @@
         >
         <input
           type="radio"
-          id="filter__tags"
-          class="filter__input visually-hidden"
-          name="filter"
-          disabled
-        />
-        <label for="filter__tags" class="filter__label"
-          >Tags <span class="filter__tags-count">0</span></label
-        >
-        <input
-          type="radio"
           id="filter__archive"
           class="filter__input visually-hidden"
           name="filter"
@@ -162,7 +152,7 @@
                       class="card__text"
                       placeholder="Start typing your text here..."
                       name="text"
-                    >This is example of new task, you can add picture, set date and time, add tags.</textarea>
+                    >This is example of new task. You can set date and chose repeating days and color.</textarea>
                   </label>
                 </div>
 
@@ -266,19 +256,6 @@
                         </div>
                       </fieldset>
                     </div>
-
-                    <div class="card__hashtag">
-                      <div class="card__hashtag-list"></div>
-
-                      <label>
-                        <input
-                          type="text"
-                          class="card__hashtag-input"
-                          name="hashtag-input"
-                          placeholder="Type new hashtag here"
-                        />
-                      </label>
-                    </div>
                   </div>
 
                   <div class="card__colors-inner">
@@ -351,7 +328,7 @@
 
                 <div class="card__status-btns">
                   <button class="card__save" type="submit">save</button>
-                  <button class="card__delete" type="button">delete</button>
+                  <button class="card__delete" type="button">cancel</button>
                 </div>
               </div>
             </form>
@@ -391,30 +368,7 @@
                       <div class="card__date-deadline">
                         <p class="card__input-deadline-wrap">
                           <span class="card__date">23 September</span>
-                          <span class="card__time">11:15 PM</span>
                         </p>
-                      </div>
-                    </div>
-
-                    <div class="card__hashtag">
-                      <div class="card__hashtag-list">
-                        <span class="card__hashtag-inner">
-                          <span class="card__hashtag-name">
-                            #todo
-                          </span>
-                        </span>
-
-                        <span class="card__hashtag-inner">
-                          <span class="card__hashtag-name">
-                            #personal
-                          </span>
-                        </span>
-
-                        <span class="card__hashtag-inner">
-                          <span class="card__hashtag-name">
-                            #important
-                          </span>
-                        </span>
                       </div>
                     </div>
                   </div>
