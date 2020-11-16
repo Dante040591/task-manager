@@ -1,11 +1,11 @@
-import {COLORS} from '../const.js';
-import {getRandomInteger} from '../utils.js';
+import {COLORS} from "../const.js";
+import {getRandomInteger} from "../utils.js";
 
 const generateDescription = () => {
   const descriptions = [
     `Изучить теорию`,
     `Сделать домашку`,
-    `Пройти интесив на соточку`
+    `Пройти интенсив на соточку`
   ];
 
   const randomIndex = getRandomInteger(0, descriptions.length - 1);
@@ -13,7 +13,7 @@ const generateDescription = () => {
   return descriptions[randomIndex];
 };
 
-const generateDays = () => {
+const generateDate = () => {
   const isDate = Boolean(getRandomInteger(0, 1));
 
   if (!isDate) {
@@ -50,8 +50,9 @@ const getRandomColor = () => {
 };
 
 export const generateTask = () => {
-  const dueDate = generateDays();
-  const repeating = dueDate === null ? generateRepeating()
+  const dueDate = generateDate();
+  const repeating = dueDate === null
+    ? generateRepeating()
     : {
       mo: false,
       tu: false,
@@ -65,9 +66,9 @@ export const generateTask = () => {
   return {
     description: generateDescription(),
     dueDate,
+    repeating,
     color: getRandomColor(),
-    isArchive: false,
-    isFavorite: false,
-    repeating
+    isArchive: Boolean(getRandomInteger(0, 1)),
+    isFavorite: Boolean(getRandomInteger(0, 1))
   };
 };

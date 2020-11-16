@@ -1,10 +1,11 @@
-import {COLORS} from '../const.js';
-import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from '../utils.js';
+import {COLORS} from "../const.js";
+import {isTaskExpired, isTaskRepeating, humanizeTaskDueDate} from "../utils.js";
 
 const createTaskEditDateTemplate = (dueDate) => {
   return `<button class="card__date-deadline-toggle" type="button">
       date: <span class="card__date-status">${dueDate !== null ? `yes` : `no`}</span>
     </button>
+
     ${dueDate !== null ? `<fieldset class="card__date-deadline">
       <label class="card__input-deadline-wrap">
         <input
@@ -23,6 +24,7 @@ const createTaskEditRepeatingTemplate = (repeating) => {
   return `<button class="card__repeat-toggle" type="button">
     repeat:<span class="card__repeat-status">${isTaskRepeating(repeating) ? `yes` : `no`}</span>
   </button>
+
   ${isTaskRepeating(repeating) ? `<fieldset class="card__repeat-days">
     <div class="card__repeat-days-inner">
       ${Object.entries(repeating).map(([day, repeat]) => `<input
@@ -40,31 +42,20 @@ const createTaskEditRepeatingTemplate = (repeating) => {
   </fieldset>` : ``}`;
 };
 
-const createTaskEditColorTemplate = (currentColor) => {
-
-  return (
-    `
-      ${COLORS.map((color) => {
-      return (
-        `
-            <input
-              type="radio"
-              id="color-${color}"
-              class="card__color-input card__color-input--${color} visually-hidden"
-              name="color"
-              value="${color}"
-              ${currentColor === color ? `checked` : ``}
-            />
-            <label
-              for="color-${color}"
-              class="card__color card__color--${color}"
-              >${color}</label
-            >
-          `
-      );
-    }).join(``)}
-    `
-  );
+const createTaskEditColorsTemplate = (currentColor) => {
+  return COLORS.map((color) => `<input
+    type="radio"
+    id="color-${color}"
+    class="card__color-input card__color-input--${color} visually-hidden"
+    name="color"
+    value="${color}"
+    ${currentColor === color ? `checked` : ``}
+  />
+  <label
+    for="color-${color}"
+    class="card__color card__color--${color}"
+    >${color}</label
+  >`).join(``);
 };
 
 export const createTaskEditTemplate = (task = {}) => {
@@ -86,16 +77,14 @@ export const createTaskEditTemplate = (task = {}) => {
   const deadlineClassName = isTaskExpired(dueDate)
     ? `card--deadline`
     : ``;
-
   const dateTemplate = createTaskEditDateTemplate(dueDate);
 
   const repeatingClassName = isTaskRepeating(repeating)
     ? `card--repeat`
     : ``;
-
   const repeatingTemplate = createTaskEditRepeatingTemplate(repeating);
 
-  const colorsTemplate = createTaskEditColorTemplate(color);
+  const colorsTemplate = createTaskEditColorsTemplate(color);
 
   return `<article class="card card--edit card--${color} ${deadlineClassName} ${repeatingClassName}">
     <form class="card__form" method="get">
@@ -105,6 +94,7 @@ export const createTaskEditTemplate = (task = {}) => {
             <use xlink:href="#wave"></use>
           </svg>
         </div>
+
         <div class="card__textarea-wrap">
           <label>
             <textarea
@@ -114,25 +104,24 @@ export const createTaskEditTemplate = (task = {}) => {
             >${description}</textarea>
           </label>
         </div>
+
         <div class="card__settings">
           <div class="card__details">
             <div class="card__dates">
-
               ${dateTemplate}
 
               ${repeatingTemplate}
-
             </div>
           </div>
+
           <div class="card__colors-inner">
             <h3 class="card__colors-title">Color</h3>
             <div class="card__colors-wrap">
-
               ${colorsTemplate}
-
             </div>
           </div>
         </div>
+
         <div class="card__status-btns">
           <button class="card__save" type="submit">save</button>
           <button class="card__delete" type="button">delete</button>
